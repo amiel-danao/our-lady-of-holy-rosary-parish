@@ -48,48 +48,8 @@ python manage.py createsuperuser //this will create admin account
 
 python manage.py runserver //This will run the web app
 
+To save a backup json file:
+python manage.py dumpdata app --indent=2 > backup.json
 
-Setup Android Source code
-
-Open vscode source code
-Install necessary extensions:
-Flutter
-Dart
-
-flutter build apk
-
-
-Running local server for hardware
-Server Code Setup
-
-
-open chrome
-
-in chrome address bar type in : chrome://flags/
-in the search box of flags type in : Insecure origins treated as secure
-Click Enabled
-Then in the textarea, type in : http://www.365gps.com
-
-go to http://www.365gps.com/ and login using 359339077128046 password is 123456
-
-Wait for the wepage to completely load
-pressd F12 in chrome
-copy and paste ALL the contents of savedb.js in chrome console
-
-
-In VSCode
-
-python -m venv venv //Creates a virtual environment folder,
-cd venv/Scripts -> Enter
-activate -> Enter
-cd ../.. -> Enter
-pip install -r requirements.txt
-
-type in command: python scrape.py
-
-
-After running the local server
-go back to chrome and MAKE SURE that the focus is on the webpage itself
-just click anywhere on the webpage
-
-to stop local server press : Ctrl + C
+To load a backup json file:
+python manage.py loaddata backup.json
