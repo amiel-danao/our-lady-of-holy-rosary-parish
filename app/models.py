@@ -107,9 +107,9 @@ class Status(models.IntegerChoices):
 
 class Appointment(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=False)
-    status = models.IntegerField(default=Status.PENDING)
+    status = models.IntegerField(default=Status.PENDING, choices=Status.choices)
     date = models.DateTimeField(default=timezone.now, blank=False)
-    purpose = models.IntegerField(default=Purpose.WEDDING)
+    purpose = models.IntegerField(default=Purpose.WEDDING, choices=Purpose.choices)
     officiant = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Name of Priest')
     number_of_attendees = models.PositiveIntegerField(default=0)
 
