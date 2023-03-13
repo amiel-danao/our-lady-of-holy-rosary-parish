@@ -136,8 +136,8 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'ourladyofholyrosaryparish$church_database',
-            'USER': 'ourladyofholyrosaryparish',
+            'NAME': 'ourladyofholyros$church_database',
+            'USER': 'ourladyofholyros',
             'PASSWORD': 'notCommonPassword123$',
             'HOST': 'ourladyofholyrosaryparish.mysql.pythonanywhere-services.com',
             'PORT': '3306',
