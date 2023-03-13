@@ -1,0 +1,23 @@
+Church Appointment
+10k
+Php2500 down to start development
+25%
+
+including:
+
+free hosting
+source code
+
+user -> select appointment
+admin -> manage of records, 
+
+user email as login
+
+Depending on type of appointment, the form will adjust
+Wedding
+Baptism
+Funeral
+
+
+upload of PSA or other important documents etc.
+

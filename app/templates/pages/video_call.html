@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}" />
+    <style>
+        body{
+            background-color: white;
+        }
+        
+        #me{
+            position: relative;
+            /* width: 50%; */
+            /* margin: 0 auto; */
+            display: block;
+        }
+        #me div{
+            height:90vh !important;
+        }
+
+        #me video{
+            height:90vh !important;
+            position: relative !important;
+        }
+
+        #remote-container{
+            display: block;
+        }
+
+        #remote-container div div{
+            height:90vh !important;
+        }
+
+        #remote-container video{
+            /* height: auto; */
+            height:90vh !important;
+            position: relative !important;
+        }
+
+        #video-icon-remote, #mic-icon-remote{
+            opacity: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-black">church - Video Call</h1>
+    
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button id="start" class="btn btn-success btn-lg"><i class="bi bi-telephone"></i> Start Call</button>
+        <button id="stop" class="btn btn-danger btn-lg" disabled><i class="bi bi-telephone-x-fill"></i> Stop Call</button>
+        
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h4>{{ request.user }}</h4>
+            <button id="video-icon" class="btn btn-outline-success btn-sm" disabled><i class="bi bi-camera-video-fill"></i></button>
+            <button id="mic-icon" class="btn btn-outline-success btn-sm" disabled><i class="bi bi-mic-fill"></i></button>
+            
+            <div id="me"></div>
+        </div>
+
+        <div class="col">
+            <h4>{{ receiver }}</h4>
+            <button id="video-icon-remote" class="btn btn-outline-success btn-sm" disabled><i class="bi bi-camera-video-fill"></i></button>
+            <button id="mic-icon-remote" class="btn btn-outline-success btn-sm" disabled><i class="bi bi-mic-fill"></i></button>
+            <div id="remote-container"></div>
+        </div>
+    </div>
+
+    <input type="text" id="app-id" value="{{ app_id }}" hidden>
+    <input type="text" id="channel" value="{{ message_gc_id }}" hidden>
+    <input type="text" id="token" value="{{ token }}" hidden>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/AgoraRTC_N-4.15.1.js' %}"></script>
+    <!-- <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.3.0.js"></script> -->
+    <script src="{% static 'js/video_call.js' %}"></script>
+{% endblock %}

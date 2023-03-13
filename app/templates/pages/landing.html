@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/css/lightgallery-bundle.css" />
+    <style>
+        
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="row h-100">
+    <div class="bg-main "></div>
+    <div class="col">
+        <div class="card w-100" >
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="align-middle">
+                            <div class="card-body">
+                                <h1 class="text-black text-center my-auto">Our Lady of Holy Rosary Parish</h1>
+                            <h6 class="card-subtitle mb-2 text-muted">Address</h6>
+                            <p class="card-text">The parish, founded in 1954, is now under the Vicariate of Sts. Peter and Paul, Diocese of Legazpi t</p>
+                            <a href="https://www.facebook.com/OLHRPBalogoParish" target="_blank" class="card-link"><i class="bi bi-facebook"></i> Facebook Page</a>
+                        </td>
+                    </tr>
+                </tbody>
+                </div>
+            </table>
+          </div>
+        
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+.bg-main{
+  background-image: url("https://scontent.fmnl19-1.fna.fbcdn.net/v/t39.30808-6/240596201_107596578311650_7952059424859367240_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=e3f864&_nc_eui2=AeHhUq3BZ8hhgK7HcySqsXDhBBonf2a8NscEGid_Zrw2x9-Ph1V0L3bfwISmzizeghxZZ-F8h1MjA1WBzmiRoOuW&_nc_ohc=OQHUHVyl8nMAX8V6Ul9&_nc_ht=scontent.fmnl19-1.fna&oh=00_AfCzt2VTGzSYQjfIJdlrWOQUI_5rnycbXC1z03fsS8GiVg&oe=6412B269") !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  height: 100vh !important;
+  width: 100% !important;
+  position: absolute;
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+}
+
+.bg-warning{
+    background-color: #fbcd91 !important;
+}

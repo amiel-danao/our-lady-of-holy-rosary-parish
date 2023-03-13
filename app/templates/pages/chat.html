@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/css/lightgallery-bundle.css" />
+    
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-white">Our Lady of Holy Rosary Parish - Chat</h1>
+    <div id="frame">
+        <div id="sidepanel">
+            <div id="profile">
+                <div class="wrap">
+                    <img id="profile-img" src="{{ request.user.get_photo_url }}" class="online" alt="" />
+                    <p>{{ request.user.email }}</p>
+                    <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+                    <div id="status-options">
+                        <ul>
+                            <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
+                            <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
+                            <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
+                            <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="contacts">
+                <ul class="ul-no-style">
+                    {% for contact in contacts %}
+                        <li class="contact">
+                            <a href="/chat/{{request.user.id}}-{{ contact.id }}" class="chat-entry">
+                                <div class="wrap">
+                                    <span class="contact-status online"></span>
+                                    <img src="{{ contact.get_photo_url  }}" alt="" />
+                                    <div class="meta">
+                                        <p class="name">{{ contact }}</p></p>
+                                        <p class="preview">{{ contact.last_message }}</p>
+                                        
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="content">
+            <div class="contact-profile">
+                {% if receiver %}
+                    <img src="{{ receiver.get_photo_url }}" alt="No other user to chat with..." />
+                    <p>{{ receiver }}</p>
+                    
+                    <div class="dropdown float-end">
+                        <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Pets
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% if pets %}
+                                {% for pet in pets %}
+                                <li><a class="dropdown-item" href="{% url 'admin:app_pet_change' pet.id %}" type="button" target="_blank">{{ pet.name }}
+                                        <img src="{{ pet.get_photo_url }}" alt="No other user to chat with..." />
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            {% else %}
+                                <li><button class="dropdown-item">This customer doesn't have any pet yet.</button></li>
+                            {% endif %}
+                        </ul>
+                      </div>
+                      {% if message_gc_id %}
+                      <div class="float-end">
+                            <a href="{% url 'video-call' message_gc_id=message_gc_id %}" onclick="openwindow.call(this); return false;" target="_blank" class="btn btn-primary" type="button">
+                                <i class="bi bi-camera-video-fill"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                {% else %}
+                    <p>No other user to chat with...</p>
+                {% endif %}
+                <div class="social-media">
+                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                     <i class="fa fa-instagram" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="messages row">
+                <ul id="message_container">
+                    
+                </ul>
+            </div>
+            
+            <div class="row">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3 message-input">
+                        <input type="text" id="input_message" name="input_message" class="form-control" placeholder="Write your message..." aria-label="Write your message..." aria-describedby="submitMessage" autocomplete="off" required>
+                        
+                        <button class="btn btn-outline-secondary submit" type="submit" id="submitMessage"><i class="bi bi-send"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <input id="message_gc_id" type="text" value="{{message_gc_id}}" hidden>
+            <input id="default_gc_id" type="text" value="{% if contacts %}{{contacts.0.id}}{% endif %}" hidden>
+            <input id="userId" type="text" value="{{ request.user.id }}" hidden>
+            <input id="myPic" type="text" value="{{ request.user.get_photo_url }}" hidden>
+            <input id="receiverPic" type="text" value="{{ receiver.get_photo_url}}" hidden>
+            <audio id="new_message_audio">
+                <source src="{% static 'audios/new_message.mp3' %}" type="audio/mpeg">
+            </audio>
+        </div>
+
+        
+        
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/lightgallery.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/plugins/thumbnail/lg-thumbnail.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/plugins/zoom/lg-zoom.umd.js"></script>
+    
+    <script>
+        var wins = {};
+        function openwindow(){
+            var url = this.href;
+            if(typeof wins[url] === 'undefined' || wins[url].closed)
+                wins[url] = window.open(url);
+            else
+                wins[url].focus();
+        }
+    </script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js'
+    
+        // Add Firebase products that you want to use
+        import { getFirestore,doc, onSnapshot, collection, query } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
+
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAO8A0v2vsb_p5xxcV7GZAN-0-vktiM57Y",
+            authDomain: "church.firebaseapp.com",
+            databaseURL: "https://church-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "church",
+            storageBucket: "church.appspot.com",
+            messagingSenderId: "914416835191",
+            appId: "1:914416835191:web:94e7c68474cc94e16a4472"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        var audio = document.getElementById('new_message_audio');
+        let played_initial = false;
+        
+        setTimeout(()=>{
+            document.body.addEventListener("mousemove", function () {
+                if (!played_initial){
+                    audio.play();
+                    played_initial = true;
+                }
+            })
+        }, 4000);
+
+        
+        
+        var message_gc_id = $('#message_gc_id').val();
+
+        if (message_gc_id.trim().length == 0){
+            message_gc_id = `${$("#userId").val()}-${$("#default_gc_id").val()}`;
+            console.log(`default message_gc_id is : ${message_gc_id}`);
+        }
+
+        if (message_gc_id.trim().length > 0){
+            const q = query(collection(db, "messages", message_gc_id, message_gc_id));
+            const unsubscribe = onSnapshot(q, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        let data = change.doc.data()
+                        // console.log(data);
+                        
+                        let timestamp = data.timestamp;
+                        let message_class = data.idFrom == $('#userId').val()? 'replies': 'sent';
+                        let picture_url = data.idFrom == $('#userId').val()? $('#myPic').val(): $('#receiverPic').val();
+                        let message_content = data.content;
+
+                        let existing_message_row = $(`li[data-timestamp='${timestamp}']`);
+
+                        if (existing_message_row.length == 0){
+
+                            let content = `<p>${message_content}</p>`;                            
+
+                            if(data.type == 1){
+                                content =  `
+                                    <img src="${message_content}" class="img-fluid image-attachments">
+                                `;
+                            }
+
+                            let message_template = `
+                                <li data-timestamp="${timestamp}" class="${message_class}">
+                                    <div class="text-center">
+                                        
+                                        <img src="${picture_url}" class="img-fluid" alt="avatar" />
+                                        
+                                    </div>
+                                    ${content}
+                                </li>`;
+                            
+                            $('#message_container').append(message_template);
+
+                            var element = document.getElementsByClassName("messages")[0];
+                            element.scrollTop = element.scrollHeight;
+
+                            if (played_initial)
+                                audio.play();
+                            if(data.type == 1){
+                                lightGallery(document.getElementById('message_container'), {
+                                    plugins: [lgZoom, lgThumbnail],
+                                    thumbnail: true,
+                                    selector:'.image-attachments'
+                                });
+                            }
+                        }
+                    }
+
+                    if (change.type === "modified") {
+                        // console.log("Modified city: ", change.doc.data());
+                    }
+                    if (change.type === "removed") {
+                        // console.log("Removed city: ", change.doc.data());
+                    }
+                });
+            });
+        }        
+
+        $(document).on('submit', 'form', function (e) {
+            e.preventDefault();
+
+            var messageInputValue = $('#submitMessage').val();
+            $('#submitMessage').val('');
+            $.ajax({
+                type: 'POST',
+                url: window.location.href,
+                data:
+                {
+                    input_message: $('#input_message').val(),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function () {
+                    $('form').get(0).reset();
+                },
+                error: function() {
+                    $('#submitMessage').val(messageInputValue);
+                }
+            });
+        });
+    </script>
+{% endblock %}

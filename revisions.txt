@@ -1,0 +1,7 @@
+[OK]1.	- nanonotify po yung user kung kelan uli yung next vaccine nila. 
+Ex. 5 days before palang nagnonotify na.  
+[OK]2.	- Yung verification sa email kasi nagamit po ng email address. 
+[OK]3.	tapos yung GUI sa admin kailangan may search halimbawa madami ng petsuser kumbaga may searcbox na dun lang hahanapin ang specific pets owner. 
+[]4.	yung sa vaccine nya parang may remider sya kung kelan next gagawin nya naka automatic na sa system na  sa mag reremind. sa gui ng user  . 
+[]5. nka print sa mismong app kung ano yung ginawa dun sa pet nila?
+ sir eto na po yung mga recommend nila kagabi.
