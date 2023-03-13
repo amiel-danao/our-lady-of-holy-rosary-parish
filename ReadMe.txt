@@ -49,7 +49,7 @@ python manage.py createsuperuser //this will create admin account
 python manage.py runserver //This will run the web app
 
 To save a backup json file:
-python manage.py dumpdata app --indent=2 > backup.json
+python manage.py dumpdata app admin_interface.theme --indent=2 > backup.json
 
 To load a backup json file:
 python manage.py loaddata backup.json
