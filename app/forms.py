@@ -78,6 +78,8 @@ class AppointmentForm(forms.ModelForm):
         super(AppointmentForm, self).__init__(*args, **kwargs)
         wedding_fields = ('name_of_husband', 'name_of_wife', 'name_of_officer', 'name_of_first_witness', 'name_of_second_witness', 'husband_birth_certificate', 'wife_birth_certificate')
         
+        self.fields['number_of_attendees'].label = "Estimated number of attendees"
+
         for field in wedding_fields:
             self.fields[field].widget.attrs.update({
                 'data-purpose_type': 'Wedding'
@@ -89,10 +91,8 @@ class AppointmentForm(forms.ModelForm):
                 'data-purpose_type': 'Baptism'
             })
 
-        funeral_fields = ('deceased_full_name', 'age', 'date_of_death', 'place_of_burial_cemetery', 'death_certificate', 'deacons',
-                          'lectors_or_readers', 'gift_bearers_for_the_offering', 'prelude_music', 'placement_of_the_pall',
-                          'entrance_hymn', 'opening_collect', 'first_reading', 'responsorial_psalm', 'musical_reading',
-                          'text_of_response', 'second_reading', )
+        funeral_fields = ('deceased_full_name', 'age', 'date_of_death', 'place_of_burial_cemetery', 'death_certificate', 'gift_bearers_for_the_offering', 'prelude_music', 'placement_of_the_pall',
+                          'entrance_hymn', 'opening_collect', 'first_reading', 'responsorial_psalm', 'text_of_response', 'second_reading', )
         for field in funeral_fields:
             self.fields[field].widget.attrs.update({
                 'data-purpose_type': 'Funeral'

@@ -104,10 +104,18 @@ class Status(models.IntegerChoices):
     DONE = 3, "Done"
     REJECTED = 4, "Rejected"
 
+def validate_file_extension(value):
+    import os
+    from django.core.exceptions import ValidationError
+    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.pdf', '.doc', '.docx']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
 
 class Appointment(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=False)
     status = models.IntegerField(default=Status.PENDING, choices=Status.choices)
+    status_description = models.TextField(default='Your appointment is not yet approved, just wait a few hours before getting approved, thank you.', blank=True, max_length=255, help_text="Describe the reason for changing the status")
     date = models.DateTimeField(default=timezone.now, blank=False)
     purpose = models.IntegerField(default=Purpose.WEDDING, choices=Purpose.choices)
     officiant = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Name of Priest')
@@ -120,8 +128,8 @@ class Appointment(models.Model):
     name_of_first_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     name_of_second_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     
-    husband_birth_certificate = models.FileField(blank=True, upload_to='birth_certificates')
-    wife_birth_certificate = models.FileField(blank=True, upload_to='birth_certificates')
+    husband_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates', validators=[validate_file_extension])
+    wife_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates', validators=[validate_file_extension])
 
     #Baptism
     fathers_full_name = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Father\'s Full Name', help_text='Surname FirstName, MiddleName')
@@ -134,8 +142,8 @@ class Appointment(models.Model):
     age = models.PositiveSmallIntegerField(validators=(MinValueValidator(0),), default=0)
     date_of_death = models.DateField(default=timezone.now)
     place_of_burial_cemetery = models.CharField(default='', max_length=50, blank=True, null=True,)
-    deacons = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Deacon(s)')
-    lectors_or_readers = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Lector(s) or Reader(s)')
+    # deacons = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Deacon(s)')
+    # lectors_or_readers = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Lector(s) or Reader(s)')
     gift_bearers_for_the_offering = models.CharField(default='', max_length=50, blank=True, null=True,)
     prelude_music = models.CharField(default='', max_length=50, blank=True, null=True)
     placement_of_the_pall = models.CharField(default='', max_length=50, blank=True, null=True,)
@@ -143,10 +151,10 @@ class Appointment(models.Model):
     opening_collect = models.CharField(default='', max_length=50, blank=True, null=True,)
     first_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
     responsorial_psalm = models.CharField(default='', max_length=50, blank=True, null=True,)
-    musical_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
+    # musical_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
     text_of_response = models.CharField(default='', max_length=50, blank=True, null=True,)
     second_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
-    death_certificate = models.FileField(blank=True, upload_to='death_certificates')
+    death_certificate = models.FileField(blank=True, upload_to='death_certificates', help_text="Submit the file: pdf, doc, docx", validators=[validate_file_extension])
 
     def __str__(self):
         return f'{self.user.email} - {self.date}'

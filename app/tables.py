@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 import django_tables2 as tables
 from .models import Appointment, Purpose, Status
+from django.core import serializers
 
 
 class AppointmentTable(tables.Table):
@@ -12,6 +13,7 @@ class AppointmentTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("date", "purpose", "status", )
         attrs = {'class': 'table table-hover shadow records-table'}
+        row_attrs = {'data-bs-toggle':"modal", 'data-bs-target':"#exampleModal", 'data-bs-appointment': lambda record: serializers.serialize('json', [ record, ])}
         # row_attrs = {
         #     "onClick": lambda record: f"document.location.href='{reverse('system:order-detail', kwargs={'pk': record.pk})}';"
         # }
