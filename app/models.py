@@ -1,6 +1,8 @@
 import uuid
 
-from django.db import models
+import os
+from shutil import copyfile
+from django.db import IntegrityError, models
 from django.forms import ValidationError
 from django.utils import timezone
 from django.core.validators import MinValueValidator
@@ -13,6 +15,9 @@ from django.utils.http import int_to_base36
 from smart_selects.db_fields import GroupedForeignKey, ChainedForeignKey
 from dirtyfields import DirtyFieldsMixin
 from django.core.management import call_command
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db.models import Q
 # from notifications.management.commands import save_notification
 
 
@@ -128,8 +133,8 @@ class Appointment(models.Model):
     name_of_first_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     name_of_second_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     
-    husband_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates', validators=[validate_file_extension])
-    wife_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates', validators=[validate_file_extension])
+    husband_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates/', validators=[validate_file_extension])
+    wife_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates/', validators=[validate_file_extension])
 
     #Baptism
     fathers_full_name = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Father\'s Full Name', help_text='Surname FirstName, MiddleName')
@@ -154,7 +159,89 @@ class Appointment(models.Model):
     # musical_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
     text_of_response = models.CharField(default='', max_length=50, blank=True, null=True,)
     second_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
-    death_certificate = models.FileField(blank=True, upload_to='death_certificates', help_text="Submit the file: pdf, doc, docx", validators=[validate_file_extension])
+    death_certificate = models.FileField(blank=True, upload_to='death_certificates/', help_text="Submit the file: pdf, doc, docx", validators=[validate_file_extension])
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.email} - {self.date}'
+
+class ArchivedFile(models.Model):
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    archived_file = models.FileField(upload_to='archived_files/')
+    archived_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('appointment', 'archived_file')
+
+    def __str__(self):
+        return f'{self.appointment} - {self.archived_date}'
+
+    @classmethod
+    def archive_appointment(cls, appointment):
+        file_fields = [
+            ('husband_birth_certificate', appointment.husband_birth_certificate),
+            ('wife_birth_certificate', appointment.wife_birth_certificate),
+            ('death_certificate', appointment.death_certificate)
+        ]
+
+        archive_files_create = []
+
+        
+        for field_name, field_value in file_fields:
+            if field_value:
+                # existing_archive_file = ArchivedFile.objects.filter(**{f'appointment__{field_name}': field_value}).first()
+                # if not existing_archive_file:
+                archived_file = create_archived_file(field_value)
+                archive_files_create.append(ArchivedFile(appointment=appointment, archived_file=archived_file))
+                # try:
+                #     ArchivedFile.objects.create(appointment=appointment, archived_file=archived_file)
+                # except IntegrityError:
+                #     pass
+
+        existing_archived_files = set(
+            ArchivedFile.objects.filter(archived_file__in=[inst.archived_file for inst in archive_files_create]).values_list('archived_file', flat=True)
+        )
+        archive_files_create = [inst for inst in archive_files_create if inst.archived_file not in existing_archived_files]
+
+        ArchivedFile.objects.bulk_create(archive_files_create)
+        # try:
+        #     if appointment.husband_birth_certificate:
+        #         archived_file = create_archived_file(appointment.husband_birth_certificate)
+        #         ArchivedFile.objects.create(appointment=appointment, archived_file=archived_file)
+        # except IntegrityError:
+        #     pass
+        
+        # try:
+        #     if appointment.wife_birth_certificate:
+        #         archived_file = create_archived_file(appointment.wife_birth_certificate)
+        #         ArchivedFile.objects.create(appointment=appointment, archived_file=archived_file)
+        # except IntegrityError:
+        #     pass
+
+        # try:    
+        #     if appointment.death_certificate:
+        #         archived_file = create_archived_file(appointment.death_certificate)
+        #         ArchivedFile.objects.create(appointment=appointment, archived_file=archived_file)
+        # except IntegrityError:
+        #     pass
+
+@receiver(post_save, sender=Appointment)
+def archive_appointment(sender, instance, created, **kwargs):
+    if instance.archived:
+        ArchivedFile.archive_appointment(instance)
+
+def create_archived_file(original_file_path):
+    file_path = original_file_path.path
+    archived_folder = 'archived_files'  # Folder where archived files will be stored
+
+    # Create the archived folder if it doesn't exist
+    if not os.path.exists(archived_folder):
+        os.makedirs(archived_folder)
+
+    file_name = os.path.basename(file_path)
+    archived_file_path = os.path.join(archived_folder, file_name)
+
+    # Copy the file to the archived location
+    copyfile(file_path, archived_file_path)
+
+    return archived_file_path  # Return the archived file path

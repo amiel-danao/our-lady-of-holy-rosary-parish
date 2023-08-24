@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.apps import apps
 from app.forms import UserChangeForm, UserCreationForm
 from django import forms
-from app.models import (Appointment,  CustomUser, Customer, Purpose, Status,)
+from app.models import (Appointment, ArchivedFile,  CustomUser, Customer, Purpose, Status,)
 from django.contrib.auth.models import Group, User
 from admin_interface.admin import Theme
 # admin.site.unregister((Theme, Group))
@@ -12,6 +12,13 @@ from admin_interface.admin import Theme
 # @admin.register(User)
 # class UserAdmin(admin.ModelAdmin):
 #     pass
+@admin.register(ArchivedFile)
+class ArchivedFileAdmin(admin.ModelAdmin):
+    list_display = [
+        field.name for field in ArchivedFile._meta.get_fields()]
+
+    def has_add_permission(self, request):
+        return False  # Disable the "Create" button
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
