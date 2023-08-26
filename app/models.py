@@ -123,7 +123,7 @@ class Appointment(models.Model):
     status_description = models.TextField(default='Your appointment is not yet approved, just wait a few hours before getting approved, thank you.', blank=False, max_length=255, help_text="Describe the reason for changing the status")
     date = models.DateTimeField(default=timezone.now, blank=False)
     purpose = models.IntegerField(default=Purpose.WEDDING, choices=Purpose.choices)
-    officiant = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Name of Priest')
+    # officiant = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Name of Priest')
     number_of_attendees = models.PositiveIntegerField(default=0)
 
     #Wedding
