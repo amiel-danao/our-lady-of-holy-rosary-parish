@@ -68,7 +68,7 @@ class AppointmentForm(forms.ModelForm):
     
     class Meta:
         model = Appointment
-        exclude = ('user', 'date', 'status')
+        exclude = ('user', 'date', 'status', 'status_description', 'archived')
         widgets = {
             'godparents': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
             'date_of_death': forms.DateInput(format='%d/%m/%Y')
