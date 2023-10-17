@@ -33,6 +33,7 @@ import math
 import time
 import os
 from agora_token_builder import RtcTokenBuilder
+from django.templatetags.static import static
 
 
 # dirname = os.path.dirname(__file__)
@@ -181,3 +182,12 @@ def register_request(request):
 def index(request):
     context = {}
     return render(request, 'pages/landing.html', context)
+
+def gallery(request):
+    images = []
+    for i in range(1, 11):
+        images.append(f'images/gallery/{i}.jpg')
+    return render(request, 'pages/gallery.html', {"images": images})
+
+def about(request):
+    return render(request, 'pages/about.html')

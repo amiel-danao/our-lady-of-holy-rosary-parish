@@ -36,22 +36,31 @@
   data-admin-utc-offset="{% now "Z" %}">
 
 <!-- Container -->
-<div id="container">
+<div  class="container-fluid">
 
     {% if not is_popup %}
     <!-- Header -->
     {% block header %}
-    <div id="header">
-        <div id="branding">
+  
+    <div id="header" class="row">
+      
+        <div id="branding" class="col px-0">
+          <div class="row p-0  mx-0">
+          <div class="col-3 p-0 mx-0">
+            {% block branding %}
+            {% endblock %}
+          </div>
+          <div class="col p-2">
           <h5 class="title text-center px-4"><a href="{% url 'index' %}" class="text-black">{% if theme.title %}{% trans theme.title %}{% else %}{{ site_title|default:_('church administration') }}{% endif %}</a></h5>  
+          </div>
+        </div>
           
-          {% block branding %}
         
-        {% endblock %}
+        
         </div>
         {% block usertools %}
         {% if has_permission %}
-        <div id="user-tools">
+        <div id="user-tools" class="col">
             {% block welcome-msg %}
                 {% translate 'Welcome,' %}
                 <strong>{% firstof user.get_short_name user.get_username %}</strong>.

@@ -30,7 +30,7 @@
         <ul class="navbar-nav text-black">
             <li class="nav-item mr-3">
                 <a href="{% url 'index' %}" class="nav-link align-middle px-0">
-                    <span class="ms-1 d-none d-sm-inline">Home</span>
+                    <span class="ms-1 d-sm-inline">Home</span>
                 </a>
             </li>
 
@@ -38,18 +38,28 @@
                 {% if user.is_superuser %}
                 <li class="nav-item mr-3">
                     <a href="{% url 'admin:index' %}" class="nav-link align-middle px-0">
-                        <span class="ms-1 d-none d-sm-inline">Admin</span>
+                        <span class="ms-1  d-sm-inline">Admin</span>
                     </a>
                 </li>
                 {% else %}
                 <li class="nav-item mr-3">
                     <a href="{% url 'appointment' %}" class="nav-link align-middle px-0">
-                         <span class="ms-1 d-none d-sm-inline">New Appointment</span>
+                         <span class="ms-1  d-sm-inline">New Appointment</span>
                     </a>
                 </li>
                 <li class="nav-item mr-3">
                     <a href="{% url 'appointment_list' %}" class="nav-link align-middle px-0">
-                        <span class="ms-1 d-none d-sm-inline">My Appointments</span>
+                        <span class="ms-1  d-sm-inline">My Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item mr-3">
+                    <a href="{% url 'gallery' %}" class="nav-link align-middle px-0">
+                        <span class="ms-1  d-sm-inline">Gallery</span>
+                    </a>
+                </li>
+                <li class="nav-item mr-3">
+                    <a href="{% url 'about' %}" class="nav-link align-middle px-0">
+                        <span class="ms-1  d-sm-inline">About</span>
                     </a>
                 </li>
                 
@@ -58,7 +68,7 @@
             {% else %}
                 <li class="nav-item mr-3">
                     <a href="{% url 'login' %}" class="nav-link align-middle px-0">
-                        <span class="ms-1 d-none d-sm-inline">Sign in</span>
+                        <span class="ms-1 d-sm-inline text-black">Sign in</span>
                         
                     </a>
                 </li>
@@ -71,7 +81,7 @@
             <p class="mr-3 text-black">Signed in as:<br>{{ user.email }}</p>
             <ul class="navbar-nav float-end justify-content-end">
                 <li class="nav-item mr-3 text-black">
-                    <i class="bi bi-box-arrow-left"></i>
+                    <a href="{% url 'logout' %}" style="color:red"><i class="bi bi-box-arrow-left"></i></a>
                     <span class="ms-1 d-none d-sm-inline">
                         <a href="{% url 'logout' %}" style="color:red">Log Out</a>
                     </span>

@@ -87,10 +87,28 @@
         #header{
             padding: 0 0 !important;
         }
+
+        .title
+        {
+            font-weight: bolder;
+            font-size: 1.5rem;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: left;
+        }
         /* .login #container{
             transform:translateY(70%) !important;
             margin-top:0 !important;
         } */
+
+        .admin-interface #user-tools{
+            color: black;
+            font-weight: bolder;
+            font-size: 0.8rem;
+        }
+        .brand-logo{
+            min-width: 128px;
+            min-height: 128px;
+        }
     </style>
     <link rel="stylesheet" type="text/css"
           href="{% static 'admin_interface/css/admin-interface.css' %}?v={{ version_md5_cache }}">
@@ -163,15 +181,19 @@ flat-theme admin-interface
 {% endblock %}
 
 {% block branding %}
+<img src="{% static 'logo/logo.png' %}" alt="church" class="brand-logo img-fluid p-1 text-center mx-auto " />
 
-
-<nav class="navbar navbar-expand-lg">
+<!-- <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'logo/logo.png' %}" alt="church" height="50">
-        </a>
+        <div class="row">
+            <div class="col-4">
+                <a class="navbar-brand" href="#">
+                    <img src="{% static 'logo/logo.png' %}" alt="church" class="float-start img-fluid w-100">
+                </a>
+            </div>
+        </div>
     </div>
-  </nav>
+  </nav> -->
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 {% endblock %}

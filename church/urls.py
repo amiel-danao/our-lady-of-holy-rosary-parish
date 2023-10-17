@@ -44,6 +44,8 @@ urlpatterns = [
         LogoutView.as_view(),
         name='logout',
     ),
+    path('gallery', views.gallery, name='gallery'),
+    path('about', views.about, name='about'),
     path("accounts/register", views.register_request, name="register"),
     path('video_call/<str:message_gc_id>/',
          views.video_call, name='video-call'),

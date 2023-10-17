@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load render_table from django_tables2 %}
+{% load django_bootstrap5  %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/css/lightgallery-bundle.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-fullscreen.min.css" integrity="sha512-JlgW3xkdBcsdFiSfFk5Cfj3sTgo3hA63/lPmZ4SXJegICSLcH43BuwDNlC9fqoUy2h3Tma8Eo48xlZ5XMjM+aQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-medium-zoom.min.css" integrity="sha512-ILbxmmqtYUE97Fmhl6ebHhHR6Q1G3GSC9dpbU64NITFIG8XGXqdYlmzGAb0I49htqaP8JNm2eLbEdBITqWbL5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-thumbnail.min.css" integrity="sha512-GRxDpj/bx6/I4y6h2LE5rbGaqRcbTu4dYhaTewlS8Nh9hm/akYprvOTZD7GR+FRCALiKfe8u1gjvWEEGEtoR6g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .bg-main{
+            background: white !important;
+            display: none;
+        }
+        .header{
+            background-image: url("/static/images/240596201_107596578311650_7952059424859367240_n.jpg") !important;
+            background-position-y: center;
+        }
+        h2 {
+            color: #333; /* Set your desired text color */
+            text-shadow: 2px 2px 4px rgba(255, 251, 0, 0.5); /* Add an outer glow */
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    
+    
+    <div class="container-fluid bg-light p-0">
+        <div class="row p-0">
+            <div class="col-12 p-0">
+                <img class="img-fluid p-0" src="{% static 'images/about.jpg' %}"/>
+            </div>
+        </div>
+        
+            
+        
+        
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    
+
+
+{% endblock %}
