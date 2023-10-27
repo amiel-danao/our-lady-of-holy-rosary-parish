@@ -3,105 +3,117 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/css/lightgallery-bundle.css" />
     
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/css/lightgallery-bundle.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    
+    <style>
+        .bg-main{
+            background: white !important;
+            display: none;
+        }
+        .header{
+            background-image: url("/static/images/240596201_107596578311650_7952059424859367240_n.jpg") !important;
+            background-position-y: center;
+        }
+        h2 {
+            color: #333; /* Set your desired text color */
+            text-shadow: 2px 2px 4px rgba(255, 251, 0, 0.5); /* Add an outer glow */
+        }
+        .chat-entry img{
+            border-radius: 50%;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-white">Our Lady of Holy Rosary Parish - Chat</h1>
-    <div id="frame">
-        <div id="sidepanel">
-            <div id="profile">
-                <div class="wrap">
-                    <img id="profile-img" src="{{ request.user.get_photo_url }}" class="online" alt="" />
-                    <p>{{ request.user.email }}</p>
-                    <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
-                    <div id="status-options">
-                        <ul>
-                            <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
-                            <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
-                            <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
-                            <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div id="contacts">
-                <ul class="ul-no-style">
-                    {% for contact in contacts %}
-                        <li class="contact">
-                            <a href="/chat/{{request.user.id}}-{{ contact.id }}" class="chat-entry">
-                                <div class="wrap">
-                                    <span class="contact-status online"></span>
-                                    <img src="{{ contact.get_photo_url  }}" alt="" />
-                                    <div class="meta">
-                                        <p class="name">{{ contact }}</p></p>
-                                        <p class="preview">{{ contact.last_message }}</p>
-                                        
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    {% endfor %}
-                    
-                </ul>
-            </div>
+<!-- <div class="container-fluid bg-light px-0 "> -->
+    <div class="row header p-4">
+        <div class="col">
+            <h4 class="alert-heading">Chat</h4>
         </div>
-        <div class="content">
-            <div class="contact-profile">
-                {% if receiver %}
-                    <img src="{{ receiver.get_photo_url }}" alt="No other user to chat with..." />
-                    <p>{{ receiver }}</p>
+    </div>
+    
+
+    <div id="frame" class="row h-100 bg-white px-0">
+        {% if contact_view %}
+        
+        <!-- Sidebar -->
+        <div class="col-md-4 col-12 bg-secondary" id="sidebar" >
+            <h3 class="text-white p-3">Select Contact</h3>
+            <ul class="list-group list-group-horizontal">
+                {% for contact in contacts %}
+                {% if request.user.is_staff %}
+                    <a href="/chat/{{ contact.id }}-{{request.user.id}}" class="p-2 chat-entry list-group-item list-group-item-action">
+                    {% else %}
+                    <a href="/chat/{{request.user.id}}-{{ contact.id }}" class="p-2 chat-entry list-group-item list-group-item-action">
+                    {% endif %}
+                <li class="list-group-item">
                     
-                    <div class="dropdown float-end">
-                        <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Pets
-                        </button>
-                        <ul class="dropdown-menu">
-                            {% if pets %}
-                                {% for pet in pets %}
-                                <li><a class="dropdown-item" href="{% url 'admin:app_pet_change' pet.id %}" type="button" target="_blank">{{ pet.name }}
-                                        <img src="{{ pet.get_photo_url }}" alt="No other user to chat with..." />
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            {% else %}
-                                <li><button class="dropdown-item">This customer doesn't have any pet yet.</button></li>
-                            {% endif %}
-                        </ul>
-                      </div>
-                      {% if message_gc_id %}
-                      <div class="float-end">
-                            <a href="{% url 'video-call' message_gc_id=message_gc_id %}" onclick="openwindow.call(this); return false;" target="_blank" class="btn btn-primary" type="button">
-                                <i class="bi bi-camera-video-fill"></i>
-                            </a>
-                        </div>
-                        {% endif %}
-                {% else %}
-                    <p>No other user to chat with...</p>
-                {% endif %}
-                <div class="social-media">
-                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                    <i class="fa fa-twitter" aria-hidden="true"></i>
-                     <i class="fa fa-instagram" aria-hidden="true"></i>
-                </div>
-            </div>
-            <div class="messages row">
-                <ul id="message_container">
-                    
-                </ul>
-            </div>
-            
-            <div class="row">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="input-group mb-3 message-input">
-                        <input type="text" id="input_message" name="input_message" class="form-control" placeholder="Write your message..." aria-label="Write your message..." aria-describedby="submitMessage" autocomplete="off" required>
+                
+                    <!-- <div class="d-flex w-25 justify-content-between"> -->
                         
-                        <button class="btn btn-outline-secondary submit" type="submit" id="submitMessage"><i class="bi bi-send"></i></button>
+                        
+                    <!-- </div> -->
+                    <img class="img-fluid w-25" src="{{ contact.get_photo_url  }}" alt="" />
+                  
+                </li>
+                <li class="list-group-item">
+                    <p class="mb-1">{{ contact }} <i class="bi bi-chat-text"></i></p>
+                </li>
+            </a>
+			    {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if not contact_view or not request.user.is_staff %}
+        <div class="col px-0" id="chat-area">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col contact-profile">
+                            {% if request.user.is_staff %}
+                            <a class="btn btn-warning mr-2 px-2" type="button" href="/chat/">
+                                <i class="bi bi-chat-square-dots"></i>
+                                Contacts
+                            </a>
+                            {% endif %}
+                            {% if receiver %}
+                                
+                                <p class="mr-2 px-2">To: {{ receiver }}</p>
+                                
+                                {% if message_gc_id %}
+                                <!-- <div class="float-end">
+                                        <a href="{% url 'video-call' message_gc_id=message_gc_id %}" onclick="openwindow.call(this); return false;" target="_blank" class="btn btn-primary" type="button">
+                                            <i class="bi bi-camera-video-fill"></i>
+                                        </a>
+                                    </div> -->
+                                    {% endif %}
+                            {% else %}
+                                <p>{{receiver.email}}</p>
+                            {% endif %}
+                        </div>
                     </div>
-                </form>
+                </div>
+                <div class="card-body p-0">
+                    <div class="messages">
+                        <ul id="message_container" class="p-0">
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer py-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-group message-input">
+                            <input type="text" id="input_message" name="input_message" class="form-control" placeholder="Write your message..." aria-label="Write your message..." aria-describedby="submitMessage" autocomplete="off" required>
+                            
+                            <button class="btn btn-outline-secondary submit" type="submit" id="submitMessage"><i class="bi bi-chat-right-text"></i></button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <input id="message_gc_id" type="text" value="{{message_gc_id}}" hidden>
@@ -113,11 +125,9 @@
                 <source src="{% static 'audios/new_message.mp3' %}" type="audio/mpeg">
             </audio>
         </div>
-
-        
-        
+        {% endif %}
     </div>
-
+<!-- </div> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/lightgallery.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/plugins/thumbnail/lg-thumbnail.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.0.0-beta.3/plugins/zoom/lg-zoom.umd.js"></script>
@@ -132,6 +142,18 @@
                 wins[url].focus();
         }
     </script>
+    <script>
+        var currentURL = window.location.href;
+
+        // Split the URL by "/"
+        var segments = currentURL.split('/');
+
+        // Access the last segment
+        var lastSegment = segments[segments.length - 1];
+
+        // Split the last segment by "-"
+        var splitLastSegment = lastSegment.split('-');
+    </script>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js'
     
@@ -140,13 +162,12 @@
 
         
         const firebaseConfig = {
-            apiKey: "AIzaSyAO8A0v2vsb_p5xxcV7GZAN-0-vktiM57Y",
-            authDomain: "church.firebaseapp.com",
-            databaseURL: "https://church-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "church",
-            storageBucket: "church.appspot.com",
-            messagingSenderId: "914416835191",
-            appId: "1:914416835191:web:94e7c68474cc94e16a4472"
+            apiKey: "AIzaSyDYm0HoOnnUy4SGbcHuMp4h9k5eaq49Tlk",
+            authDomain: "our-lady-of-holy-parish.firebaseapp.com",
+            projectId: "our-lady-of-holy-parish",
+            storageBucket: "our-lady-of-holy-parish.appspot.com",
+            messagingSenderId: "367960414367",
+            appId: "1:367960414367:web:b50ffe6db29e1ba9a26aaa"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -183,6 +204,9 @@
                         let timestamp = data.timestamp;
                         let message_class = data.idFrom == $('#userId').val()? 'replies': 'sent';
                         let picture_url = data.idFrom == $('#userId').val()? $('#myPic').val(): $('#receiverPic').val();
+                        if(picture_url === null || picture_url.trim().length === 0){
+                            picture_url = "{% static 'logo/app_icon.png' %}";
+                        }
                         let message_content = data.content;
 
                         let existing_message_row = $(`li[data-timestamp='${timestamp}']`);
@@ -193,7 +217,7 @@
 
                             if(data.type == 1){
                                 content =  `
-                                    <img src="${message_content}" class="img-fluid image-attachments">
+                                    <img src="${message_content}" class="img-fluid image-attachments" />
                                 `;
                             }
 
@@ -239,6 +263,9 @@
 
             var messageInputValue = $('#submitMessage').val();
             $('#submitMessage').val('');
+
+            
+
             $.ajax({
                 type: 'POST',
                 url: window.location.href,
@@ -248,6 +275,7 @@
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
                 success: function () {
+                    $('#input_message').val('');
                     $('form').get(0).reset();
                 },
                 error: function() {
@@ -256,4 +284,30 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get references to the sidebar and chat area elements
+            const sidebar = document.getElementById("sidebar");
+            const chatArea = document.getElementById("chat-area");
+        
+            // Get a reference to the toggle button
+            const toggleButton = document.getElementById("toggleSidebar");
+        
+            // Function to toggle the sidebar and chat area
+            function toggleSidebar() {
+                if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                    sidebar.style.display = "block";
+                    chatArea.style.display = "none";
+                } else {
+                    sidebar.style.display = "none";
+                    chatArea.style.display = "block";
+                }
+            }
+        
+            // Add an event listener to the toggle button
+            toggleButton.addEventListener("click", toggleSidebar);
+        });
+        </script>
+    
 {% endblock %}

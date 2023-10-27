@@ -1,4 +1,5 @@
 
+from django.db.models import Q
 from django.views.generic.edit import CreateView
 from django.utils.timezone import get_current_timezone
 from datetime import datetime
@@ -36,16 +37,16 @@ from agora_token_builder import RtcTokenBuilder
 from django.templatetags.static import static
 
 
-# dirname = os.path.dirname(__file__)
-# filename = "church-firebase-adminsdk-f45f4-e1db7a11eb.json"
-# filepath = os.path.join(
-#     dirname, f'../{filename}')
+dirname = os.path.dirname(__file__)
+filename = "our-lady-of-holy-parish-firebase-adminsdk-d950z-134e11285d.json"
+filepath = os.path.join(
+    dirname, f'../{filename}')
 
-# if not firebase_admin._apps:
-#     cred = credentials.Certificate(filepath)
-#     firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+    cred = credentials.Certificate(filepath)
+    firebase_admin.initialize_app(cred)
 
-# database = firestore.client()
+database = firestore.client()
 
 query_watch = None
 
@@ -191,3 +192,110 @@ def gallery(request):
 
 def about(request):
     return render(request, 'pages/about.html')
+
+def chat_all(request):
+    if request.user is None or request.user.is_authenticated is False:
+        return redirect('admin:index')
+
+    template = loader.get_template('pages/chat.html')
+    all_custmomers = Customer.objects.filter(~Q(email=request.user.email))
+    receiver = None
+    message_gc_id = None
+    try:
+        if request.user.is_staff:            
+            receiver = CustomUser.objects.filter(is_staff=False).first()
+            message_gc_id = f'{receiver.id}-{request.user.id}'
+        else:
+            receiver = CustomUser.objects.filter(is_staff=True).first()
+            message_gc_id = f'{request.user.id}-{receiver.id}'
+    except Exception:
+        pass
+
+    # pets = get_my_pets(receiver)
+
+    context = {
+        # "pets": pets,
+        "contact_view": request.user.is_staff,
+        "receiver": receiver,
+        "contacts": all_custmomers,
+        "message_gc_id": message_gc_id
+    }
+
+    if request.method == 'POST':
+        send_message(request=request, receiver_id=receiver.id)
+
+    return HttpResponse(template.render(context, request))
+
+def chat(request, message_gc_id):
+    if request.user is None or request.user.is_authenticated is False:
+        return redirect('admin:index')
+
+    template = loader.get_template('pages/chat.html')
+    all_customers = CustomUser.objects.filter(~Q(email=request.user.email))
+    receiver = None
+    receiver_id = ''
+
+    try:
+        if request.user.is_staff:
+            receiver_id = message_gc_id.split('-')[0]
+            customer = Customer.objects.filter(id=receiver_id).first()
+            receiver = CustomUser.objects.filter(email=customer.email).first()
+            receiver_id = receiver.id
+            message_gc_id = f'{receiver_id}-{request.user.id}'            
+        else:
+            receiver_id = message_gc_id.split('-')[1]
+            receiver = CustomUser.objects.filter(id=receiver_id).first()
+        
+    except Exception:
+        pass
+
+    # pets = get_my_pets(receiver)
+
+    context = {
+        # "pets": pets,
+        "receiver": receiver,
+        "contacts": all_customers,
+        "message_gc_id": message_gc_id
+    }
+
+    if request.method == 'POST':
+        send_message(request=request, receiver_id=receiver_id)
+
+    return HttpResponse(template.render(context, request))
+
+
+def send_message(request, receiver_id):
+    input_message = None
+    if request is None or request.user is None or receiver_id is None:
+        return
+    message_gc_id = f'{request.user.id}-{receiver_id}'
+    if(request.user.is_staff):
+        message_gc_id = f'{receiver_id}-{request.user.id}'
+    try:
+        input_message = request.POST.get('input_message')
+
+        if input_message is not None:
+            current_milliseconds = str(math.trunc(time.time() * 1000))
+            new_message = {
+                u'content': input_message,
+                u'timestamp': current_milliseconds,
+                u'idFrom': request.user.id,
+                u'idTo': receiver_id,
+                u'type': 0
+            }
+
+            batch = database.batch()
+
+            message_thread_reference = database.collection(
+                u'messages').document(message_gc_id)
+            batch.set(message_thread_reference, {
+                u'timestamp': firestore.SERVER_TIMESTAMP}, merge=True)
+
+            message_reference = database.collection(u'messages').document(message_gc_id).collection(
+                message_gc_id).document(current_milliseconds)
+
+            batch.set(message_reference, new_message, merge=True)
+
+            batch.commit()
+    except Exception as exception:
+        print(exception)
