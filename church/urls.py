@@ -54,3 +54,4 @@ urlpatterns = [
     url(r'^api/veterinarylist', views.veterinary_list),
     url(r'^chaining/', include('smart_selects.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)
