@@ -106,9 +106,12 @@
             font-size: 0.8rem;
         }
         .brand-logo{
-            min-width: 128px;
-            min-height: 128px;
+            /* min-width: 128px;
+            min-height: 128px; */
+            width: 10%;
+            height: auto;
         }
+
     </style>
     <link rel="stylesheet" type="text/css"
           href="{% static 'admin_interface/css/admin-interface.css' %}?v={{ version_md5_cache }}">
@@ -181,17 +184,13 @@ flat-theme admin-interface
 {% endblock %}
 
 {% block branding %}
-<img src="{% static 'logo/logo.png' %}" alt="church" class="brand-logo img-fluid p-1 text-center mx-auto " />
+<!-- <img src="{% static 'logo/logo.png' %}" alt="church" class="brand-logo img-fluid p-1 text-center mx-auto" /> -->
 
 <!-- <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-4">
-                <a class="navbar-brand" href="#">
-                    <img src="{% static 'logo/logo.png' %}" alt="church" class="float-start img-fluid w-100">
-                </a>
-            </div>
-        </div>
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'logo/logo.png' %}" alt="church" height="50">
+        </a>
     </div>
   </nav> -->
 

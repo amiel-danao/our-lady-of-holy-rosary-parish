@@ -16,6 +16,7 @@
   #user-tools a{
     color:black !important;
   }
+
 </style>
 {% if not is_popup and is_nav_sidebar_enabled %}
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
@@ -36,26 +37,19 @@
   data-admin-utc-offset="{% now "Z" %}">
 
 <!-- Container -->
-<div  class="container-fluid">
+<div id="container">
 
-    {% if not is_popup %}
-    <!-- Header -->
-    {% block header %}
-  
-    <div id="header" class="row">
-      
-        <div id="branding" class="col px-0">
-          <div class="row p-0  mx-0">
-          <div class="col-3 p-0 mx-0">
-            {% block branding %}
-            {% endblock %}
-          </div>
-          <div class="col p-2">
-          <h5 class="title text-center px-4"><a href="{% url 'index' %}" class="text-black">{% if theme.title %}{% trans theme.title %}{% else %}{{ site_title|default:_('church administration') }}{% endif %}</a></h5>  
-          </div>
-        </div>
-          
+  {% if not is_popup %}
+  <!-- Header -->
+  {% block header %}
+  <div id="header">
+      <div id="branding">
+          <h5 class="title text-center px-4"><img src="{% static 'logo/logo.png' %}" alt="church" class="brand-logo img-fluid p-1" /><a href="{% url 'index' %}" class="text-black">{% if theme.title %}{% trans theme.title %}{% else %}{{ site_title|default:_('church administration') }}{% endif %}</a></h5>  
         
+          
+        {% block branding %}
+
+        {% endblock %}
         
         </div>
         {% block usertools %}
