@@ -64,35 +64,47 @@ class NewUserForm(UserCreationForm):
         return user
     
 class AppointmentForm(forms.ModelForm):
-    purpose = forms.ChoiceField(choices=Purpose.choices)
+    # purpose = forms.ChoiceField(choices=Purpose.choices)
     
     class Meta:
         model = Appointment
         exclude = ('user', 'date', 'status', 'status_description', 'archived')
         widgets = {
             'godparents': forms.Textarea(attrs={'cols': 80, 'rows': 10}),
-            'date_of_death': forms.DateInput(format='%d/%m/%Y')
+            'date_of_death': forms.DateInput(format='%d/%m/%Y'),
+            'time_of_burial': forms.DateInput(format='%d/%m/%Y')
         }
 
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
-        wedding_fields = ('name_of_husband', 'name_of_wife', 'name_of_officer', 'name_of_first_witness', 'name_of_second_witness', 'husband_birth_certificate', 'wife_birth_certificate')
+        wedding_fields = ('name_of_husband', 'name_of_wife', 'name_of_officer', 'name_of_first_witness', 'name_of_second_witness', 'name_of_third_witness', 'husband_birth_certificate', 'wife_birth_certificate')
         
         self.fields['number_of_attendees'].label = "Estimated number of attendees"
+        self.fields['name_of_husband'].label = "Name of Groom"
+        self.fields['name_of_wife'].label = "Name of Bride"
+        self.fields['husband_birth_certificate'].label = "Groom Birth Certificate"
+        self.fields['wife_birth_certificate'].label = "Bride Birth Certificate"
+        
 
         for field in wedding_fields:
             self.fields[field].widget.attrs.update({
                 'data-purpose_type': 'Wedding'
             })
 
-        baptism_fields = ('fathers_full_name', 'mothers_full_name', 'address', 'godparents')
+        baptism_fields = ('child_full_name', 'fathers_full_name', 'mothers_full_name', 'address', 'godparents', 'child_birth_certificate')
         for field in baptism_fields:
             self.fields[field].widget.attrs.update({
                 'data-purpose_type': 'Baptism'
             })
 
-        funeral_fields = ('deceased_full_name', 'age', 'date_of_death', 'place_of_burial_cemetery', 'death_certificate', 'gift_bearers_for_the_offering', 'prelude_music', 'placement_of_the_pall',
-                          'entrance_hymn', 'opening_collect', 'first_reading', 'responsorial_psalm', 'text_of_response', 'second_reading', )
+        self.fields['child_full_name'].label = "Name of child"
+        self.fields['fathers_full_name'].label = "Father's full name"
+        self.fields['mothers_full_name'].label = "Mother's Maiden Name"
+        self.fields['address'].label = "Present Address"
+        self.fields['godparents'].label = "God parents"
+
+        funeral_fields = ('deceased_full_name', 'age', 'date_of_death', 'place_of_burial_cemetery', 'time_of_burial', 'death_certificate', 
+                          'first_reader', 'second_reader', )
         for field in funeral_fields:
             self.fields[field].widget.attrs.update({
                 'data-purpose_type': 'Funeral'

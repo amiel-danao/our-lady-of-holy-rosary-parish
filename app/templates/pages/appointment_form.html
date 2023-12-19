@@ -47,8 +47,25 @@
                     </div>
                   </div>
                 {{ form|crispy }}
+                <div class="alert alert-primary weddingFee" role="alert">
+                    <h4 class="alert-heading">Wedding Fee</h4>
+                    <hr>
+                    <p class="mb-0">6k, ordinary 2k</p>
+                  </div>
+                  <div class="alert alert-primary baptismFee" role="alert" >
+                    <h4 class="alert-heading">Baptism fee</h4>
+                    <hr>
+                    <p class="mb-0">1,500, ordinary 300</p>
+                  </div>
+                  <div class="alert alert-primary funeralFee" role="alert">
+                    <h4 class="alert-heading">Funeral mass fee</h4>
+                    <hr>
+                    <p class="mb-0">1,500</p>
+                  </div>
                 <button type="submit" class="btn btn-success">Submit</button>
             </form>
+            
+            
         </div>
         
         
@@ -87,14 +104,22 @@
 
             $("input[name='date']").flatpickr(config);
             $("input[name='date_of_death']").flatpickr();
+            $("input[name='time_of_burial']").flatpickr();
 
-            const wedding_fields = $("[data-purpose_type='Wedding']");
+            const wedding_fields = $("[data-purpose_type='Wedding'], .wedding");
             const baptisim_fields = $("[data-purpose_type='Baptism']");
-            const funeral_fields = $("[data-purpose_type='Funeral']");
+            const funeral_fields = $("[data-purpose_type='Funeral']"); 
+            const weddingFee = $(".weddingFee");
+            const baptismFee = $(".baptismFee");
+            const funeralFee = $(".funeralFee");
 
             toggleFields(baptisim_fields, 'none');
             toggleFields(funeral_fields, 'none');
+            baptismFee.hide();
+            funeralFee.hide();
+
             toggleFields(wedding_fields, 'block');
+            weddingFee.show();
 
             document.getElementById('id_purpose').onchange = function(){
                 let purpose_type = this.options[this.selectedIndex].text;
@@ -103,18 +128,23 @@
                 toggleFields(wedding_fields, 'none');
                 toggleFields(baptisim_fields, 'none');
                 toggleFields(funeral_fields, 'none');
-                
+                weddingFee.hide();
+                baptismFee.hide();
+                funeralFee.hide();
 
                 if(purpose_type == 'Wedding'){
                     toggleFields(wedding_fields, 'block');
+                    weddingFee.show();weddingFee.show();
                 }
 
                 if(purpose_type == 'Baptism'){
                     toggleFields(baptisim_fields, 'block');
+                    baptismFee.show();            
                 }
 
                 if(purpose_type == 'Funeral'){
                     toggleFields(funeral_fields, 'block');
+                    funeralFee.show();
                 }
             };
 

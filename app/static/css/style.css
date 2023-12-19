@@ -5,8 +5,7 @@
   height: 100vh !important;
   width: 100% !important;
   position: absolute;
-  filter: blur(2px);
-  -webkit-filter: blur(2px);
+  background-position-y: bottom;
 }
 
 .bg-warning{

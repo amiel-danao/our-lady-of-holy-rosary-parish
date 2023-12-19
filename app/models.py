@@ -124,41 +124,36 @@ class Appointment(models.Model):
     date = models.DateTimeField(default=timezone.now, blank=False)
     purpose = models.IntegerField(default=Purpose.WEDDING, choices=Purpose.choices)
     # officiant = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Name of Priest')
-    number_of_attendees = models.PositiveIntegerField(default=0)
-
+    
     #Wedding
     name_of_husband = models.CharField(default='', max_length=69, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     name_of_wife = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     name_of_officer = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     name_of_first_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     name_of_second_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
+    name_of_third_witness = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Surname FirstName, MiddleName')
     
+    number_of_attendees = models.PositiveIntegerField(default=0)
+
     husband_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates/', validators=[validate_file_extension])
     wife_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates/', validators=[validate_file_extension])
 
     #Baptism
+    child_full_name = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Child\'s Full Name', help_text='Surname FirstName, MiddleName')
     fathers_full_name = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Father\'s Full Name', help_text='Surname FirstName, MiddleName')
     mothers_full_name = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Mother\'s Full Name', help_text='Surname FirstName, MiddleName')
     address = models.CharField(default='', max_length=50, blank=True, null=True, help_text='Street, Brgy/Village, City/Town, Province')    
     godparents = models.CharField(default='', max_length=1024, blank=True, null=True, help_text='Name of God Parents, separated by new line')
+    child_birth_certificate = models.FileField(blank=True, help_text="Submit the file: pdf, doc, docx", upload_to='birth_certificates/', validators=[validate_file_extension])
 
     #Funeral
     deceased_full_name = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Deceased Full Name', help_text='Surname FirstName, MiddleName')
     age = models.PositiveSmallIntegerField(validators=(MinValueValidator(0),), default=0)
     date_of_death = models.DateField(default=timezone.now)
     place_of_burial_cemetery = models.CharField(default='', max_length=50, blank=True, null=True,)
-    # deacons = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Deacon(s)')
-    # lectors_or_readers = models.CharField(default='', max_length=50, blank=True, null=True, verbose_name='Lector(s) or Reader(s)')
-    gift_bearers_for_the_offering = models.CharField(default='', max_length=50, blank=True, null=True,)
-    prelude_music = models.CharField(default='', max_length=50, blank=True, null=True)
-    placement_of_the_pall = models.CharField(default='', max_length=50, blank=True, null=True,)
-    entrance_hymn = models.CharField(default='', max_length=50, blank=True, null=True,)
-    opening_collect = models.CharField(default='', max_length=50, blank=True, null=True,)
-    first_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
-    responsorial_psalm = models.CharField(default='', max_length=50, blank=True, null=True,)
-    # musical_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
-    text_of_response = models.CharField(default='', max_length=50, blank=True, null=True,)
-    second_reading = models.CharField(default='', max_length=50, blank=True, null=True,)
+    time_of_burial = models.DateTimeField(default=timezone.now, blank=False)
+    first_reader = models.CharField(default='', max_length=50, blank=True, null=True,)
+    second_reader = models.CharField(default='', max_length=50, blank=True, null=True,)
     death_certificate = models.FileField(blank=True, upload_to='death_certificates/', help_text="Submit the file: pdf, doc, docx", validators=[validate_file_extension])
     archived = models.BooleanField(default=False)
 

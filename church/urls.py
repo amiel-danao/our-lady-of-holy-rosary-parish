@@ -32,7 +32,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('api/', include((router.urls, 'app_name'), namespace='instance_name')),
-    path('chat/', views.chat_all, name='chat'),
+    # path('chat/', views.chat_all, name='chat'),
     path('appointment/', views.CreateAppointmentView.as_view(), name='appointment'),
     path('appointment/list', views.AppointmentListView.as_view(), name='appointment_list'),
     path('accounts/login/',

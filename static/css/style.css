@@ -1,13 +1,13 @@
 .bg-main{
-    background-image: url("/static/images/240596201_107596578311650_7952059424859367240_n.jpg") !important;
-    background-size: cover !important;
-    background-repeat: no-repeat !important;
-    height: 100vh !important;
-    width: 100% !important;
-    position: absolute;
-    filter: blur(2px);
-    -webkit-filter: blur(2px);
-  }
+  background-image: url("/static/images/240596201_107596578311650_7952059424859367240_n.jpg") !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  height: 100vh !important;
+  width: 100% !important;
+  position: absolute;
+  background-position-y: bottom;
+}
+
   
 
 .bg-warning{
